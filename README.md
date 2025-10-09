@@ -20,6 +20,12 @@ _Contribution by Soldera_
 
 Comprehensive Flask/SQLAlchemy 2.0 guidelines with component-based architecture, Pydantic validation, RESTful API patterns, and service layer design. Includes migration strategies from legacy structures and testing best practices.
 
+#### **Vue 3 Frontend Guidelines** (`frontend-vue.mdc`)
+
+_Contribution by Soldera_
+
+Vue 3.5 Composition API standards with TypeScript, Bootstrap 5, Pinia state management, and UI-based architecture. Covers component organization, Vuelidate validation, error handling, and declarative programming patterns for maintainable SPAs.
+
 ---
 
 ## 🚀 How to Use
@@ -46,8 +52,8 @@ These prompts can be adapted for:
 
 Every week, we'll release a new prompt covering different aspects of AI-assisted development:
 
-- **Backend Development** ✅ (Current)
-- Frontend patterns (coming soon)
+- **Backend Development** ✅
+- **Frontend Development** ✅
 - Testing strategies (coming soon)
 - DevOps & infrastructure (coming soon)
 - Code review prompts (coming soon)

@@ -1,0 +1,504 @@
+---
+description:
+globs: client/**/*.vue
+alwaysApply: false
+---
+
+# Vue Guidelines
+
+### Project Setup
+
+The project is built using the following technologies/libraries (these are the most important dependencies, for a full list check [package.json](mdc:client/package.json)).
+
+**Build Commands**: Use `yarn build` (not `npm build`) for production builds.
+
+- Vue 3.5 (Composition API)
+- Bootstrap 5 (with the Phoenix theme)
+- Pinia
+- VueUse
+- Vuelidate
+- Lodash
+- TypeScript
+- HeadlessUI 1.7 for Vue
+
+### General Best Practices
+
+- Follow declarative programming patterns.
+- Adhere to best practices for writing simple, reasonable, maintainable, and easy-to-reason-about frontend code.
+- Adhere to best practices for all of the technologies listed in the project setup.
+- Keep communication between components simple and easy to reason about. Seperation of concerns is important.
+- Treat the backend as the source of truth. All state that can be derived from the source of truth should be derived from the source of truth (the backend state).
+- Assume that anything fetched from the server can be refetched at any point in time. Components and views should be able to deal with this without additional complex state sync logic.
+- Where reasonable, keep state in sync with URL query params to aid with browser history management.
+- Where form validation is needed, use Vuelidate with only the validators defined in [useValidators.ts](mdc:client/src/composables/useValidators.ts). If a new validator must be created, it should be defined in [useValidators.ts](mdc:client/src/composables/useValidators.ts).
+
+### `<script setup lang="ts">` Best Practices
+
+- Components and views should be written using the Vue Composition API in the `<script setup lang="ts">` syntax.
+- Follow TypeScript rules [frontend-typescript.mdc](mdc:.cursor/rules/frontend-typescript.mdc)
+- When organizing your proposed code additions and changes within the script blocks, follow this order:
+  1. Imports (external libraries → Vue core → components/composables → assets/utilities)
+  2. TypeScript definitions (interfaces/types/enums → prop types)
+  3. Component setup functions (`defineProps` → `defineEmits` → `defineExpose` → `defineOptions`)
+  4. State declarations (ref/reactive variables)
+  5. Computed properties
+  6. Lifecycle hooks
+  7. Watchers
+  8. Methods/event handlers
+  9. `provide`/`inject` pairs.
+     _(Do not start reorganizing the whole file unless instructed to do so.)_
+- When implementing a watcher, consider if any alternative is available that would achieve the same result in a more easy-to-debug way.
+- Only put things in the `onMounted` lifecycle hook if it is strictly necessary (i.e., requires some interaction with its DOM). The `onMounted` hook should be used sparingly.
+- If you find yourself needing to directly manipulate and select DOM elements in the code, it is likely a sign that some other alternative approach should be considered.
+
+#### Using Libraries
+
+- Instead of directly using the Vue Router and route modules to interact and update URL queries, heavily prefer using [useQueryManager.ts](mdc:client/src/composables/useQueryManager.ts) unless that module is not capable of achieving the desired results.
+- Many standard formatting tasks have already been implemented in [formatUtils.ts](mdc:client/src/composables/formatUtils.ts), so always check these before implementing your own formatter.
+- Where possible, use utility functions from Lodash and VueUse. Avoid hand-rolling utility functions unless absolutely necessary. Avoid Lodash cloneDeep unless it's the only option (generally it isn't)
+
+#### Declaring Props
+
+Define props for components using the type-only props declaration. If you need to give props defaults, use `withDefaults`:
+
+```ts
+const props = defineProps<{
+  foo: string;
+  bar?: number;
+}>();
+
+const props = withDefaults(
+  defineProps<{
+    foo: string;
+    bar?: number;
+  }>(),
+  {
+    bar: 0,
+  }
+);
+```
+
+If `props` are not used in the `<script>` block of the SFC, you can use `defineProps` without `const props =`.
+
+#### Emitted Events
+
+For communication from child components to parent components, prefer emitting events over passing down functions in props.
+
+##### Declaring Emits
+
+Define emitted events for components using the type-only emit declaration:
+
+```ts
+const emit = defineEmits<{
+  (e: "change", id: number): void;
+  (e: "update:strategy", value: string): void;
+}>();
+```
+
+If `emit` is not used in the `<script>` block of the SFC, you can use `defineEmits` without `const emit =`.
+
+##### Event Naming Scheme
+
+- Use a consistent naming scheme for emitted events (`verb:scope`, e.g., `update:strategy`). If no scope is necessary (e.g., input components), then the scope part can be omitted (e.g., `update`).
+
+#### V-Model
+
+Prefer using `v-model` over manually declaring `:value` and handling change events (`@change`, `@input`, etc.).
+For components where it makes sense to define props as a data model, use `v-model` in addition/instead of props.
+
+#### Error Handling
+
+##### General Principles
+
+- Use a global error handler for unhandled exceptions.
+- Emit errors to parent components when appropriate.
+- Provide user-friendly error messages without technical details.
+- Log errors for debugging (but not sensitive data).
+
+##### Component Error Handling
+
+- Use `try/catch` blocks for asynchronous operations.
+- Handle edge cases and show appropriate UI feedback.
+- Implement fallback UI for components that might fail.
+
+Example:
+
+```ts
+try {
+  await fetchUserData();
+} catch (error) {
+  // Use the injected globalErrorHandler
+  // const globalErrorHandler = inject("globalErrorHandler") as (error: any) => void;
+  globalErrorHandler(error);
+}
+```
+
+### `<template>` Best Practices
+
+- Keep props in camelCase in templates.
+- Use the PascalCase version of component names when using components in templates.
+- `FontAwesomeIcon` is a globally registered component and can be used from any template block without importing.
+- When passing props to components and you encounter a situation where the prop name is the same as the variable name, you can use the shorthand syntax:
+
+```vue
+<template>
+  <!-- Long form of defining same-name props (avoid) -->
+  <Component :someProp="someProp">
+
+  <!-- Short form of defining same-name props (preferred) -->
+  <Component :someProp>
+</template>
+```
+
+- Emitting events from the `<template>` block should default to `$emit`.
+- Never directly define an element's CSS within the `<template>` block. It must be done via references to Bootstrap classes or via classes defined in the custom CSS section.
+
+### `<style scoped lang="scss">` Best Practices
+
+- Strongly favor using Bootstrap 5 utility classes over writing custom CSS. Only write custom CSS if the intended outcome cannot be achieved via Bootstrap 5 utility classes.
+- Avoid writing custom CSS like the plague. However, if it is unavoidable, use a `<style scoped lang="scss">` in the SFC to write CSS.
+
+### State Management with Pinia
+
+- Stores should be placed in the `src/{component}/use{Resource}Store.ts` directory.
+- For defining state stores, use the setup-style store syntax.
+
+## UI-Based Architecture
+
+### Directory Structure
+
+**UI-Based Architecture (Current Standard):**
+
+The folder structure follows the UI layout and user interface organization to keep related functionality together based on how users interact with the application.
+
+```
+client/src/
+├── dashboard/                    # Main dashboard functionality
+│   ├── common/                   # Shared dashboard components
+│   │   ├── FollowUpButton.vue   # Common UI elements
+│   │   ├── MarketPriceInfoModal.vue
+│   │   └── SpotStrategyPicker.vue
+│   ├── inventory_management/     # Inventory management section
+│   │   ├── common/              # Shared inventory components
+│   │   │   ├── companyOrderApi.ts
+│   │   │   ├── companyOrderTypes.ts
+│   │   │   ├── FileUploadCard.vue
+│   │   │   ├── PortfolioItemsTable.vue
+│   │   │   └── usePortfolioItemsStore.ts
+│   │   ├── company_orders/      # Company orders subsection
+│   │   │   ├── BuyGoComponent.vue
+│   │   │   ├── SellGoComponent.vue
+│   │   │   ├── SendGoComponent.vue
+│   │   │   ├── CancelGoStatementComponent.vue
+│   │   │   ├── details/         # Order details components
+│   │   │   │   ├── CompanyOrderDetailsModal.vue
+│   │   │   │   └── OrderDetailsSection.vue
+│   │   │   └── types/           # Order-specific types
+│   │   │       └── virtualAccountTypes.ts
+│   │   ├── accounts/            # Account management
+│   │   │   ├── OwnAccountReceiveComponent.vue
+│   │   │   ├── ReceiveGoComponent.vue
+│   │   │   └── VirtualAccountSelectorComponent.vue
+│   │   └── overview/            # Inventory overview
+│   │       ├── ChartSelectFilterComponent.vue
+│   │       ├── FilterableChartPanel.vue
+│   │       └── FilterablePortfolioChartPanel.vue
+│   ├── production_strategy/      # Production strategy section
+│   │   ├── overview/            # Strategy overview
+│   │   │   ├── StrategyOverviewTab.vue
+│   │   │   ├── TimelineItem.vue
+│   │   │   ├── TimelineRoot.vue
+│   │   │   ├── forwards/        # Forward sales subsection
+│   │   │   │   ├── ForwardOverviewComponent.vue
+│   │   │   │   ├── ForwardSaleScheduleCard.vue
+│   │   │   │   ├── ForwardSalesInfo.vue
+│   │   │   │   ├── ProductionProjectionBarChart.vue
+│   │   │   │   └── StackedBarChart.vue
+│   │   │   └── PPA/             # PPA-specific components
+│   │   │       ├── PPAStrategyOverview.vue
+│   │   │       └── PeriodLimitEditor.vue
+│   │   ├── issuance-reporting/  # Issuance reporting
+│   │   │   ├── FileUploadModal.vue
+│   │   │   ├── IssuanceProductionDataTable.vue
+│   │   │   ├── IssuanceReportingTab.vue
+│   │   │   └── useIssuanceProductionDataStore.ts
+│   │   └── settings/            # Strategy settings
+│   │       ├── CountrySelector.vue
+│   │       ├── RegistryDevicesSection.vue
+│   │       └── StrategyCustomizationTab.vue
+│   ├── ConsolidatedDashboardComponent.vue
+│   ├── CompanyDataComponent.vue
+│   └── BigCompanyComponent.vue
+├── admin/                        # Admin functionality
+│   ├── commission/              # Commission management
+│   │   ├── commission.ts        # Commission API
+│   │   └── ReferredCompaniesModal.vue
+│   ├── forwards/                # Forward management
+│   │   ├── ForwardReservationsDonutChart.vue
+│   │   └── ProductionQuarterQuickfill.vue
+│   ├── manageAccount.ts         # Account management store
+│   └── AdminCompanyManagementComponent.vue
+├── money/                        # Financial components
+│   ├── admin/                   # Admin financial tools
+│   │   └── transactions/        # Transaction management
+│   ├── commission/              # Commission components
+│   ├── invoice/                 # Invoice management
+│   └── SalesTransactionsComponent.vue
+├── views/                        # Top-level view components (pages)
+│   ├── DashboardView.vue        # Main dashboard page
+│   ├── SettingsView.vue         # Settings page
+│   ├── admin/                   # Admin views
+│   │   ├── AccountsView.vue
+│   │   ├── DashboardView.vue
+│   │   └── forwards/
+│   │       ├── ForwardsView.vue
+│   │       └── ForwardReservationsView.vue
+│   └── SignUpView.vue
+├── router/                       # Vue Router configuration
+├── store/                        # Global Pinia stores
+├── composables/                  # Global composables
+├── components/                   # Global/shared components
+│   └── layout/                  # Layout components
+│       ├── RootLayout.vue
+│       └── UserFacingLayout.vue
+├── api/                         # API layer
+├── types/                       # Global TypeScript types
+└── assets/                      # Static assets
+```
+
+### Key Principles for UI-Based Structure
+
+**Organization by User Interface:**
+
+- Structure folders to match the UI layout and user workflow
+- Group related functionality by how users interact with features
+- Keep shared components within their respective UI sections
+
+**Feature Grouping:**
+
+- `dashboard/` - All main user dashboard functionality
+- `admin/` - Administrative tools and interfaces
+- `money/` - Financial and transaction-related components
+- `views/` - Top-level page components that correspond to routes
+
+**Hierarchical Organization:**
+
+- Use nested folders to represent UI hierarchy (e.g., `dashboard/inventory_management/company_orders/`)
+- Place shared components in `common/` folders within their respective sections
+- Keep related types, APIs, and stores close to their consuming components
+
+### Routing Structure
+
+**Route Patterns matching UI structure:**
+
+- **Dashboard routes**: `/dashboard` → `dashboard/` folder
+- **Admin routes**: `/admin/*` → `admin/` folder
+- **Money routes**: `/money/*` → `money/` folder
+- **Sub-routes**: Match nested folder structure
+
+**Vue Router Examples:**
+
+```typescript
+// router/index.ts
+const routes = [
+  {
+    path: "/dashboard",
+    component: () => import("@/views/DashboardView.vue"),
+    children: [
+      // Inventory management routes
+      {
+        path: "inventory",
+        children: [
+          {
+            path: "buy",
+            component: () =>
+              import(
+                "@/dashboard/inventory_management/company_orders/BuyGoComponent.vue"
+              ),
+          },
+          {
+            path: "sell",
+            component: () =>
+              import(
+                "@/dashboard/inventory_management/company_orders/SellGoComponent.vue"
+              ),
+          },
+        ],
+      },
+      // Production strategy routes
+      {
+        path: "strategy",
+        children: [
+          {
+            path: "overview",
+            component: () =>
+              import(
+                "@/dashboard/production_strategy/overview/StrategyOverviewTab.vue"
+              ),
+          },
+          {
+            path: "issuance",
+            component: () =>
+              import(
+                "@/dashboard/production_strategy/issuance-reporting/IssuanceReportingTab.vue"
+              ),
+          },
+        ],
+      },
+    ],
+  },
+
+  // Admin routes
+  {
+    path: "/admin",
+    component: () => import("@/views/admin/DashboardView.vue"),
+    children: [
+      {
+        path: "forwards",
+        component: () => import("@/views/admin/forwards/ForwardsView.vue"),
+      },
+      {
+        path: "commission",
+        component: () =>
+          import("@/admin/commission/ReferredCompaniesModal.vue"),
+      },
+    ],
+  },
+];
+```
+
+### File Naming Conventions
+
+**Components:**
+
+- Use PascalCase with descriptive names based on functionality
+- `{Feature}Component.vue` - Main feature components
+- `{Feature}Modal.vue` - Modal dialogs
+- `{Feature}Table.vue` - Data tables
+- `{Feature}Card.vue` - Card components
+
+**Shared Files:**
+
+- `common/` folders contain shared components within a UI section
+- `{feature}Api.ts` - API functions for a feature
+- `{feature}Types.ts` - TypeScript interfaces/types
+- `use{Feature}Store.ts` - Pinia stores
+
+### API Layer Organization
+
+**UI-Section Based APIs:**
+
+```typescript
+// dashboard/inventory_management/common/companyOrderApi.ts
+import { api } from "@/api/core";
+import type { CompanyOrder, OrderCreateRequest } from "./companyOrderTypes";
+
+export const companyOrderApi = {
+  listOrders: () => api.get<CompanyOrder[]>("/company_orders"),
+  createOrder: (data: OrderCreateRequest) =>
+    api.post<CompanyOrder>("/company_orders", data),
+  getOrderDetails: (id: number) =>
+    api.get<CompanyOrder>(`/company_orders/${id}`),
+};
+
+// admin/commission/commission.ts
+export const adminCommissionApi = {
+  getCommissionData: () => api.get("/admin/commission"),
+  updateCommissionSettings: (data: CommissionSettings) =>
+    api.post("/admin/commission/settings", data),
+};
+
+// Preferred: Direct response handling (matches backend direct model_dump)
+const response = await api.get<OrderResponse>("/company_orders");
+return response.data; // Clean, simple
+
+// Avoid: Nested data structure handling
+const response = await api.get<{ data: OrderResponse }>("/company_orders");
+return response.data.data; // Awkward, confusing
+```
+
+### State Management Structure
+
+**UI-Section Based Stores:**
+
+```typescript
+// dashboard/inventory_management/common/usePortfolioItemsStore.ts
+import { defineStore } from "pinia";
+import { companyOrderApi } from "./companyOrderApi";
+
+export const usePortfolioItemsStore = defineStore("portfolioItems", () => {
+  const items = ref<PortfolioItem[]>([]);
+  const loading = ref(false);
+
+  const fetchItems = async () => {
+    loading.value = true;
+    try {
+      const response = await companyOrderApi.listOrders();
+      items.value = response.data;
+    } finally {
+      loading.value = false;
+    }
+  };
+
+  return {
+    items: readonly(items),
+    loading: readonly(loading),
+    fetchItems,
+  };
+});
+
+// dashboard/production_strategy/issuance-reporting/useIssuanceProductionDataStore.ts
+export const useIssuanceProductionDataStore = defineStore(
+  "issuanceProductionData",
+  () => {
+    // Issuance-specific state and actions
+  }
+);
+
+// admin/manageAccount.ts
+export const useManageAccountStore = defineStore("manageAccount", () => {
+  // Admin account management state and actions
+});
+```
+
+### Component Organization
+
+**Component Structure:**
+
+```vue
+<template>
+  <!-- HTML -->
+</template>
+
+<script setup lang="ts">
+// code
+</script>
+
+<style scoped lang="scss"></style>
+```
+
+### Best Practices for UI-Based Architecture
+
+**Component Communication:**
+
+- **Props down, events up** - Pass data down via props, communicate up via events
+- **Use stores for UI section state** - Each UI section can have its own stores
+- **Share common components** - Use `common/` folders for shared functionality within UI sections
+
+**File Organization:**
+
+- **Group by UI interaction** - Keep files that users interact with together
+- **Nested structure** - Mirror the UI hierarchy in folder structure
+- **Shared resources** - Place shared utilities in appropriate `common/` folders
+
+**Import Patterns:**
+
+- **Relative imports within sections** - Use `../common/` for shared section components
+- **Absolute imports across sections** - Use `@/dashboard/` for cross-section imports
+- **Keep imports logical** - Import from the closest shared location
+
+**Type Safety:**
+
+- **Section-specific types** - Keep types close to their usage in `{feature}Types.ts` files
+- **Shared types** - Use `src/types/` for globally shared interfaces
+- **Import types appropriately** - Import from the closest type definition
