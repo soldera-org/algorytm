@@ -1,0 +1,42 @@
+---
+description:
+globs: tests/**/*
+alwaysApply: false
+---
+
+# Backend Testing Guidelines
+
+## Test Structure and Organization
+
+- Place tests in the `tests/` directory
+- Name test files with the pattern `test_{module_name}.py`
+- Group tests by functionality to different test classes within the same test file
+- Use clear and descriptive test names that indicate what is being tested
+- Include both positive tests (expected behavior) and negative tests (error handling)
+
+## Test Base Classes
+
+- Inherit from `BaseDBTestCase` for tests requiring database access
+- Implement `setUp` to prepare test state
+- Use fixtures to create reusable test data
+- Mock external dependencies to isolate tests
+
+## Test Data Management
+
+- Create test data in `setUp` methods
+- Use ([test_factory.py](mdc:tests/utils/test_factory.py)) to create models in the tests
+- Use fixtures for complex test data
+- Isolate test data between test cases
+- Don't rely on existing database state
+
+## Mocking
+
+- Mock external dependencies (APIs, services, etc.)
+- Use `unittest.mock` for mocking
+- Be specific about what to mock to avoid over-mocking
+- Verify mock calls when behavior is important
+
+## Coverage and Quality
+
+- Write tests for bug fixes to prevent regressions
+- Focus on testing behavior, not implementation details

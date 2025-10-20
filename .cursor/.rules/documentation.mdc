@@ -1,0 +1,99 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+
+# General Documentation Guidelines
+
+## Comments
+
+### When to Add Comments
+
+Comments should be added in the following cases:
+
+- Complex business logic that isn't immediately obvious
+- Non-obvious decisions and algorithm implementations
+- Security considerations (prefix with `SECURITY:`)
+- Performance optimizations (prefix with `PERF:`)
+- Temporary solutions or workarounds (prefix with `WORKAROUND:`)
+
+### Comment Style
+
+- Add comments to code that requires additional business context or is otherwise unintuitive
+- Focus on explaining **why**, not what the code does
+- Keep comments concise and to the point
+- Use complete sentences with proper punctuation
+- Update comments when the code changes
+- **Avoid redundant comments** that just repeat what the method signature or code already makes obvious
+
+### What NOT to Comment
+
+Do not add comments that simply restate what is already clear from:
+
+- Method signatures (parameters, return types)
+- Variable names and types
+- Simple operations or assignments
+- Standard patterns or conventions
+
+Example of **bad comments**:
+
+```python
+def get_user_by_id(user_id: int) -> User | None:
+    """
+    Get a user by their ID.
+
+    Args:
+        user_id: The ID of the user to retrieve
+
+    Returns:
+        User object if found, None otherwise
+    """
+```
+
+Example of **good comments**:
+
+```python
+def get_user_by_id(user_id: int) -> User | None:
+    """Get user by ID, checking cache first for performance."""
+```
+
+Example:
+
+```
+// SECURITY: We use bcrypt instead of a faster hash because security is more important than speed here
+const hashedPassword = await bcrypt.hash(password, 10);
+
+// PERF: Memoizing this calculation as it's expensive and called frequently
+const memoizedValue = useMemo(() => expensiveCalculation(value), [value]);
+
+// WORKAROUND: setTimeout is needed until API issue #123 is fixed
+setTimeout(() => {
+  fetchData();
+}, 100);
+```
+
+## Architecture Documentation
+
+- Complex components should include a brief architecture description
+- Document interactions with external systems
+- Include diagrams for complex flows (can be added as comments with ASCII or reference to external documentation)
+- Document assumptions and constraints
+
+## Code Examples
+
+- Include examples for complex APIs or functions when appropriate
+- Make examples concise but complete enough to understand usage
+- Ensure examples are runnable and accurate
+
+## Documentation Maintenance
+
+- Update documentation when code changes
+- Remove outdated comments and documentation
+- Review documentation regularly as part of code reviews
+
+## Language-Specific Guidelines
+
+For language-specific documentation guidelines, refer to:
+
+- [frontend-documentation.mdc](mdc:.cursor/rules/frontend-documentation.mdc) for TypeScript

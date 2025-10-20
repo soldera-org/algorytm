@@ -26,6 +26,30 @@ _Contribution by Soldera_
 
 Vue 3.5 Composition API standards with TypeScript, Bootstrap 5, Pinia state management, and UI-based architecture. Covers component organization, Vuelidate validation, error handling, and declarative programming patterns for maintainable SPAs.
 
+#### **Backend Testing Guidelines** (`backend-testing.mdc`)
+
+_Contribution by Soldera_
+
+Comprehensive backend testing strategies using unittest and BaseDBTestCase. Covers test organization, test data management, mocking external dependencies, and maintaining test isolation. Includes patterns for creating reusable test factories and fixtures.
+
+#### **Frontend Testing Guidelines** (`frontend-testing.mdc`)
+
+_Contribution by Soldera_
+
+Testing standards for Vue 3 applications using spec files. Focuses on testing business logic over implementation details, organizing tests with describe blocks, and maintaining proper test isolation between test suites.
+
+#### **Documentation Guidelines** (`documentation.mdc`)
+
+_Contribution by Soldera_
+
+Language-agnostic documentation standards emphasizing meaningful comments that explain "why" rather than "what". Includes guidelines for security, performance, and workaround annotations, plus principles for avoiding redundant documentation.
+
+#### **Frontend Documentation Guidelines** (`frontend-documentation.mdc`)
+
+_Contribution by Soldera_
+
+TypeScript and Vue-specific documentation patterns using JSDoc. Covers function documentation with throws tags, complex type and interface documentation, Vue component annotations, and API integration documentation strategies.
+
 ---
 
 ## 🚀 How to Use
@@ -54,7 +78,9 @@ Every week, we'll release a new prompt covering different aspects of AI-assisted
 
 - **Backend Development** ✅
 - **Frontend Development** ✅
-- Testing strategies (coming soon)
+- **Backend Testing** ✅
+- **Frontend Testing** ✅
+- **Documentation Standards** ✅
 - DevOps & infrastructure (coming soon)
 - Code review prompts (coming soon)
 - And more...

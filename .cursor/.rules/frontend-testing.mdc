@@ -1,0 +1,17 @@
+---
+description:
+globs: client/**/*.spec.ts
+alwaysApply: false
+---
+
+# Frontend Testing Guidelines
+
+## Test Structure and Organization
+
+- Place tests in `client/tests/` directory. Follow code file path structure.
+  Example:
+  Code file: client/src/store/store.ts
+  Test file: client/tests/store/store.spec.ts
+- Use clear and descriptive test names. Group relevant tests with `describe` blocks.
+- Isolate test data between `describe` blocks.
+- Focus on testing actual business logic. Avoid testing implementation details.

@@ -1,0 +1,77 @@
+---
+description:
+globs: client/**/*
+alwaysApply: false
+---
+
+# Frontend Documentation Guidelines
+
+## Function Documentation
+
+### TypeScript/JavaScript
+
+- All public functions should use JSDoc with:
+  - Description of purpose and behavior
+  - `@throws` tag when applicable with error conditions
+
+Example:
+
+```ts
+/**
+ * Calculates the total price including tax
+ *
+ * @throws {Error} When price or taxRate is negative
+ */
+function calculatePriceWithTax(price: number, taxRate: number): number {
+  if (price < 0 || taxRate < 0) {
+    throw new Error("Price and tax rate must be non-negative");
+  }
+  return price * (1 + taxRate);
+}
+```
+
+## Vue Component Documentation
+
+### Component Description
+
+- Explain any non-obvious behaviors or edge cases
+
+## TypeScript Types and Interfaces
+
+- Document complex types and interfaces with JSDoc
+- Explain non-obvious type properties
+- Include examples for complex types when helpful
+
+Example:
+
+```ts
+/**
+ * Configuration for the company dashboard
+ *
+ * @property visibleColumns - Array of column ids to display
+ * @property sortOrder - Field and direction to sort by
+ * @property filterSettings - Criteria for filtering dashboard data
+ */
+interface DashboardConfig {
+  visibleColumns: string[];
+  sortOrder: {
+    field: string;
+    direction: "asc" | "desc";
+  };
+  filterSettings?: {
+    dateRange?: {
+      start: Date;
+      end: Date;
+    };
+    status?: string[];
+  };
+}
+```
+
+## API Integration Documentation
+
+- Document API endpoints being called
+- Document request and response structures
+- Include error handling strategies
+
+Refer to [documentation.mdc](mdc:.cursor/rules/documentation.mdc) for additional guidelines applicable to all code.
