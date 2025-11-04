@@ -50,6 +50,12 @@ _Contribution by Soldera_
 
 TypeScript and Vue-specific documentation patterns using JSDoc. Covers function documentation with throws tags, complex type and interface documentation, Vue component annotations, and API integration documentation strategies.
 
+#### **Spec Management System** (`spec-rules.mdc`)
+
+_Contribution by Soldera_
+
+Comprehensive specification-driven development workflow for managing features from planning to implementation. Includes spec templates, file organization patterns, AI-assisted implementation workflows, and domain-specific context for renewable energy GO trading platforms. Covers architecture patterns, implementation standards, and progress tracking.
+
 ---
 
 ## 🚀 How to Use
@@ -81,6 +87,7 @@ Every week, we'll release a new prompt covering different aspects of AI-assisted
 - **Backend Testing** ✅
 - **Frontend Testing** ✅
 - **Documentation Standards** ✅
+- **Spec-Driven Development** ✅
 - DevOps & infrastructure (coming soon)
 - Code review prompts (coming soon)
 - And more...

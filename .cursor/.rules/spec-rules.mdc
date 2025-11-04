@@ -1,0 +1,185 @@
+---
+description:
+globs: specs/**
+alwaysApply: false
+---
+
+# Spec Management System
+
+## File Organization
+
+- **Location**: `specs/DEV-{number}-{description}.md`
+- **Discovery**: `ls specs/DEV-*.md` or search: `grep -r "app/market_insights" specs/`
+
+## Soldera Business Context
+
+**Domain**: Renewable energy GO (Guarantees of Origin) trading platform
+**Core Concepts**:
+
+- **EACs**: Energy Attribute Certificates (1 MWh renewable energy)
+- **Premiums**: Additional value for attributes (wind/solar, ecolabels, etc.)
+- **Vintages**: Year of energy production (2023, 2024, 2025, etc.)
+- **Pricing**: Bid/ask spreads with historical tracking
+
+## When to Create vs Implement
+
+- **Create new spec**: For new features not covered by existing specs
+- **Implement existing**: If spec already exists, follow it and update progress
+
+## Architecture Patterns
+
+**Module Organization**: `app/{domain}/` (e.g., `app/market_insights/`)
+**Admin Features**: `app/{domain}/admin/` + `client/src/{domain}/admin/`
+**Service Layer**: `{domain}_service.py` (business logic) + `{domain}_controller.py` (API)
+**Validation**: `{domain}_validator.py` (Pydantic models)
+**Tests**: `tests/{domain}/` (main) + `tests/{domain}/admin/` (admin features)
+
+**Component Patterns**:
+
+- **Admin Interface**: Bootstrap 5, tabbed layout, modular components
+- **Data Entry**: Modal forms with validation
+- **Data Display**: Filterable tables with pagination
+- **Charts**: Chart.js for visualization
+
+## Spec Structure Template
+
+```markdown
+# DEV-XXX: Title
+
+**Last Updated**: YYYY-MM-DD
+**Status**: 🚧 Planning | ⏳ In Progress | ✅ Complete
+**Module**: `app/{domain}/`
+**Tags**: `#feature`, `#pattern`, `#tech`
+**Dependencies**: DEV-YYY (or None)
+
+## Overview
+
+What and why in 2-3 sentences.
+
+## Business Context
+
+- Domain problem being solved (use correct GO/EAC terminology)
+- User workflow and business rules (producers, buyers, registries)
+- Technical constraints and requirements
+- Integration points with existing Soldera systems
+
+## Requirements
+
+**Files to Create/Modify:**
+
+- Follow modular organization: `app/{domain}/` and `client/src/{domain}/`
+- Exact file paths with purpose and established pattern reference
+
+**Functionality:**
+
+- Core business requirements
+- Technical implementation details
+- Integration points and constraints
+
+## Implementation Plan
+
+### Foundation Setup
+
+- [ ] Database/models …
+
+### Core Development
+
+- [ ] Service layer …
+- [ ] API endpoints …
+
+### Integration & Testing
+
+- [ ] Frontend components …
+- [ ] Backend and frontend Tests
+
+## Definition of Done
+
+- [ ] All files created/updated
+- [ ] Tests passing (service + integration)
+- [ ] Feature working end-to-end
+- [ ] Follows established patterns
+
+## Implementation Notes
+
+Track decisions and pattern deviations as you work.
+```
+
+## AI Workflow
+
+**1. Before Starting:**
+
+- Search for existing specs: `grep -r "relevant-keyword" specs/`
+- If found: Read context. Then proceed with implementing existing spec
+- If none: ask clarifying questions, then create new spec
+
+ALWAYS: Ask clarifying questions. Do not start coding until all questions are answered. Write down Q&A in spec
+
+**2. While Working:**
+
+- Check off **Implementation Plan** items
+- Document decisions in **Implementation Notes**
+
+**3. Pattern Discovery:**
+
+- Search by tag: `grep -r "#ai-upload" specs/`
+- Read referenced specs: `cat specs/DEV-225-*.md`
+
+## Implementation Standards
+
+**Code Style**:
+
+- Python: Ruff formatting, 140 char lines, double quotes, 4 spaces
+- TypeScript: Follow frontend-typescript.mdc standards
+- Comment prefixes: `SECURITY:`, `PERF:`, `WORKAROUND:`
+
+**Database Models**:
+
+- Use SQLAlchemy ORM with proper indexes and SQLAlchemy 2.0 query style
+- Include created_at/updated_at metadata
+- Add SoftDeleteMixin for historical data
+- Use descriptive field names and constraints
+
+**API Patterns**:
+
+- Pydantic models for validation (`{feature}_validator.py`) with `...Request`/`...Response` naming
+- Service layer for business logic (`{feature}_service.py`)
+- Controller for HTTP handling (`{feature}_controller.py`)
+- Response format: Direct model response (avoid nested `{"data": resource}` structure)
+- Authorization with super_admin/user roles
+
+**Frontend Patterns**:
+
+- Vue 3 Composition API with TypeScript
+- Bootstrap 5 utility classes (avoid custom CSS)
+- Modular components (tables, modals, filters separate)
+- Consistent naming: `{Feature}Component.vue`
+
+**Testing Requirements**:
+
+- Backend: `tests/{domain}/test_{module_name}.py` pattern with BaseDBTestCase
+- Frontend: `client/tests/` following file path structure with `.spec.ts` files
+- Focus on business logic, avoid testing implementation details
+- Mock external dependencies and isolate test data
+
+## Common Tags
+
+- **Features**: `#pricing`, `#portfolio`, `#certificates`, `#cancellation`
+- **Patterns**: `#ai-upload`, `#admin-interface`, `#service`, `#chart-visualization`
+- **Tech**: `#pydantic`, `#bootstrap`, `#vue`, `#sqlalchemy`
+- **Domain**: `#eac`, `#premiums`, `#vintages`, `#go-trading`
+
+## Implementation Decision Guidelines
+
+**Follow Patterns**: Use established patterns unless there's a compelling business reason to deviate
+**Document Deviations**: Always explain why you're departing from standard patterns
+**Preserve History**: Use write-only approaches for pricing/financial data
+**Maintain Backwards Compatibility**: Ensure existing features continue working
+**Performance Considerations**: Index database queries, paginate large datasets
+
+## Bootstrap (Empty Specs Folder)
+
+If no specs exist:
+
+1. Create first spec following template above
+2. Use generic tags until patterns emerge
+3. Document new patterns as they develop
