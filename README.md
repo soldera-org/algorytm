@@ -58,20 +58,68 @@ Comprehensive specification-driven development workflow for managing features fr
 
 ---
 
+### Claude Code Conventions (`.claude/` directory)
+
+For teams using Claude Code or preferring markdown-based conventions, we've mirrored our Cursor rules in the `.claude/` directory. Same battle-tested standards, different format.
+
+#### **Backend Conventions** (`backend_conventions.md`)
+
+_Contribution by Soldera_
+
+Python/Flask backend patterns with SQLAlchemy 2.0, component-based architecture, service layers, Pydantic validation, RESTful API design, and migration strategies. Includes type hints, error handling patterns, and testing standards.
+
+#### **Frontend Conventions** (`frontend_conventions.md`)
+
+_Contribution by Soldera_
+
+Vue 3 Composition API conventions with TypeScript, UI-based architecture, declarative programming patterns, Bootstrap 5, Pinia state management, component organization, form validation, and i18n best practices.
+
+#### **Testing Conventions** (`testing_conventions.md`)
+
+_Contribution by Soldera_
+
+Comprehensive testing strategies for both backend (unittest, BaseDBTestCase) and frontend (Vitest, Vue Test Utils). Covers test organization, mocking patterns, factory functions, and testing business logic over implementation details.
+
+#### **Documentation Conventions** (`documentation_conventions.md`)
+
+_Contribution by Soldera_
+
+Documentation philosophy emphasizing meaningful comments that explain "why" not "what". Includes SECURITY/PERF/WORKAROUND annotations, JSDoc patterns for TypeScript, Vue component documentation, and maintenance guidelines.
+
+#### **Error Handling** (`error_handling.md`)
+
+_Contribution by Soldera_
+
+Unified error handling approach for full-stack applications. Covers logging best practices, global error handlers, structured error responses, monitoring strategies, and user-friendly error messaging patterns.
+
+#### **Domain Knowledge** (`domain_knowledge.md`)
+
+_Contribution by Soldera_
+
+Business context for renewable energy GO (Guarantees of Origin) trading platform. Essential terminology in multiple languages, market participants, regulatory framework, and common misconceptions to avoid. Helps AI understand domain-specific requirements.
+
+---
+
 ## 🚀 How to Use
 
 ### For Cursor Users
 
-1. **Copy the rule file** to your project's `.cursor/rules/` directory
+1. **Copy the rule file** from `.cursor/.rules/` to your project's `.cursor/rules/` directory
 2. **Configure the glob pattern** in the frontmatter (e.g., `globs: **/*.py`)
 3. **Set `alwaysApply`** to `true` (for global rules) or `false` (for file-specific rules)
 4. Cursor will automatically apply these rules when working on matching files
+
+### For Claude Code Users
+
+1. **Copy the convention files** from `.claude/` to your project's `.claude/` directory
+2. Claude Code will automatically discover and apply these conventions
+3. Files are in standard markdown format for easy customization
 
 ### General Use
 
 These prompts can be adapted for:
 
-- Other AI coding assistants (GitHub Copilot, Claude, etc.)
+- Other AI coding assistants (GitHub Copilot, ChatGPT, etc.)
 - Team coding guidelines documentation
 - Code review checklists
 - Onboarding materials
@@ -82,12 +130,14 @@ These prompts can be adapted for:
 
 Every week, we'll release a new prompt covering different aspects of AI-assisted development:
 
-- **Backend Development** ✅
-- **Frontend Development** ✅
-- **Backend Testing** ✅
-- **Frontend Testing** ✅
-- **Documentation Standards** ✅
+- **Backend Development** ✅ (Cursor + Claude Code)
+- **Frontend Development** ✅ (Cursor + Claude Code)
+- **Backend Testing** ✅ (Cursor + Claude Code)
+- **Frontend Testing** ✅ (Cursor + Claude Code)
+- **Documentation Standards** ✅ (Cursor + Claude Code)
 - **Spec-Driven Development** ✅
+- **Error Handling** ✅ (Claude Code)
+- **Domain Knowledge** ✅ (Claude Code)
 - DevOps & infrastructure (coming soon)
 - Code review prompts (coming soon)
 - And more...
