@@ -4,7 +4,7 @@ A collection of production-tested AI prompts and Cursor rules, shared as part of
 
 ## 📖 About
 
-This repository accompanies the [Algorütm podcast episode on AI in Development](https://algorytm.captivate.fm/episode/25-09-algorutm-praktilisi-vtteid-ai-rakendamisest-arenduses), where [Soldera](https://soldera.io) shared practical approaches to using AI in software development after nearly 2 years of hands-on experience.
+This repository accompanies the [Algorütm podcast episode on AI in Development](https://algorytm.captivate.fm/episode/25-09-algorutm-praktilisi-vtteid-ai-rakendamisest-arenduses), where [Soldera](https://www.soldera.org) shared practical approaches to using AI in software development after nearly 2 years of hands-on experience.
 
 Following listener requests, we're releasing our internal prompts and Cursor rules **one per week** to help the Estonian tech community leverage AI more effectively in their development workflows.
 
