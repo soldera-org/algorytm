@@ -159,7 +159,7 @@ These prompts reflect real-world usage at Soldera. If you have suggestions or wa
 ## 📚 Resources
 
 - **Podcast Episode**: [Praktilisi võtteid AI rakendamisest arenduses](https://algorytm.captivate.fm/episode/25-09-algorutm-praktilisi-vtteid-ai-rakendamisest-arenduses)
-- **Soldera**: [https://soldera.io](https://soldera.io)
+- **Soldera**: [https://www.soldera.org](https://www.soldera.org)
 - **Algorütm Podcast**: [https://algorytm.captivate.fm](https://algorytm.captivate.fm)
 
 ---
